@@ -7,18 +7,18 @@ import java.util.List;
  * Wrapper class for the Polymarket markets API response.
  */
 public class MarketsResponse {
-    @JsonProperty("markets")
-    private List<Market> markets;
+    @JsonProperty("data")
+    private List<Market> data;
     
     @JsonProperty("next_cursor")
     private String nextCursor;
     
-    public List<Market> getMarkets() {
-        return markets;
+    public List<Market> getData() {
+        return data;
     }
     
-    public void setMarkets(List<Market> markets) {
-        this.markets = markets;
+    public void setData(List<Market> data) {
+        this.data = data;
     }
     
     public String getNextCursor() {
