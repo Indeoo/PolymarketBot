@@ -1,6 +1,6 @@
 package com.venherak.polymarket.service;
 
-import com.venherak.polymarket.Polymarket.Bot.model.MarketsResponse;
+import com.venherak.polymarket.model.MarketsResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
