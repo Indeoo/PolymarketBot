@@ -1,12 +1,24 @@
 package com.venherak.polymarket.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
  * Model class representing a Polymarket market.
+ * This class is also a JPA entity for database persistence.
  */
 public class Market {
+    @JsonIgnore
+    private Long id;
+    
+    @JsonIgnore
+    private LocalDateTime createdAt;
+    
+    @JsonIgnore
+    private LocalDateTime updatedAt;
+
     @JsonProperty("enable_order_book")
     private boolean enableOrderBook;
     
