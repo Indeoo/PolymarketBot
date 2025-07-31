@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: PolymarketBot
+  datasource:
+    hikari:
+      password: mysecretpassword
+      username: myuser
+      jdbc-url: jdbc:postgresql://localhost:5432/mydatabase
