@@ -5,3 +5,8 @@ spring:
     password: mysecretpassword
     username: myuser
     url: jdbc:postgresql://localhost:5432/mydatabase
+
+# Polymarket API configuration
+polymarket:
+  api:
+    base-url: https://clob.polymarket.com
