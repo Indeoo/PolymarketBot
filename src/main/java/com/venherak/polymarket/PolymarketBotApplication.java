@@ -1,4 +1,4 @@
-package com.venherak.polymarket.Polymarket.Bot;
+package com.venherak.polymarket;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

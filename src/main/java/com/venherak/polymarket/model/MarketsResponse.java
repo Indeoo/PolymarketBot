@@ -1,4 +1,4 @@
-package com.venherak.polymarket.Polymarket.Bot.model;
+package com.venherak.polymarket.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;

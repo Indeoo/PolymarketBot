@@ -1,4 +1,4 @@
-package com.venherak.polymarket.Polymarket.Bot;
+package com.venherak.polymarket;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

@@ -1,4 +1,4 @@
-package com.venherak.polymarket.Polymarket.Bot.config;
+package com.venherak.polymarket.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

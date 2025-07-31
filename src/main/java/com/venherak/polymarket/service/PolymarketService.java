@@ -1,4 +1,4 @@
-package com.venherak.polymarket.Polymarket.Bot.service;
+package com.venherak.polymarket.service;
 
 import com.venherak.polymarket.Polymarket.Bot.model.MarketsResponse;
 import org.springframework.beans.factory.annotation.Value;
