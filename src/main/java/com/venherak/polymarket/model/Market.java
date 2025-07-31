@@ -108,21 +108,36 @@ public class Market {
     
     // Nested class for rewards
     public static class Rewards {
-        @JsonProperty("rates")
-        private String rates;
-        
         @JsonProperty("min_size")
         private int minSize;
         
         @JsonProperty("max_spread")
         private int maxSpread;
         
-        public String getRates() { return rates; }
-        public void setRates(String rates) { this.rates = rates; }
+        @JsonProperty("event_start_date")
+        private String eventStartDate;
+        
+        @JsonProperty("event_end_date")
+        private String eventEndDate;
+        
+        @JsonProperty("in_game_multiplier")
+        private double inGameMultiplier;
+        
+        @JsonProperty("reward_epoch")
+        private int rewardEpoch;
+        
         public int getMinSize() { return minSize; }
         public void setMinSize(int minSize) { this.minSize = minSize; }
         public int getMaxSpread() { return maxSpread; }
         public void setMaxSpread(int maxSpread) { this.maxSpread = maxSpread; }
+        public String getEventStartDate() { return eventStartDate; }
+        public void setEventStartDate(String eventStartDate) { this.eventStartDate = eventStartDate; }
+        public String getEventEndDate() { return eventEndDate; }
+        public void setEventEndDate(String eventEndDate) { this.eventEndDate = eventEndDate; }
+        public double getInGameMultiplier() { return inGameMultiplier; }
+        public void setInGameMultiplier(double inGameMultiplier) { this.inGameMultiplier = inGameMultiplier; }
+        public int getRewardEpoch() { return rewardEpoch; }
+        public void setRewardEpoch(int rewardEpoch) { this.rewardEpoch = rewardEpoch; }
     }
     
     // Nested class for tokens

@@ -15,7 +15,7 @@ public class MarketEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
-    @Column(name = "condition_id", unique = true)
+    @Column(name = "condition_id")
     private String conditionId;
     
     @Column(name = "question_id")

@@ -92,10 +92,10 @@ public class MarketMappingService {
             if (market.getTags() != null) {
                 entity.setTagsJson(objectMapper.writeValueAsString(market.getTags()));
             }
-            
-            if (market.getTokens() != null) {
-                entity.setTokensJson(objectMapper.writeValueAsString(market.getTokens()));
-            }
+
+//            if (market.getTokens() != null) {
+//                entity.setTokensJson(objectMapper.writeValueAsString(market.getTokens()));
+//            }
             
             if (market.getRewards() != null) {
                 entity.setRewardsJson(objectMapper.writeValueAsString(market.getRewards()));

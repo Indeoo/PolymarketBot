@@ -3,7 +3,6 @@ package com.venherak.polymarket.runner;
 import com.venherak.polymarket.service.PolymarketService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import java.util.logging.Logger;
@@ -14,7 +13,6 @@ import java.util.logging.Logger;
  * Only runs when the "init-data" profile is active.
  */
 @Component
-@Profile("init-data")
 public class MarketDataInitializer implements CommandLineRunner {
     
     private static final Logger logger = Logger.getLogger(MarketDataInitializer.class.getName());
