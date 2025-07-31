@@ -81,6 +81,7 @@ public class PolymarketService {
             try {
                 MarketsResponse response = getMarkets(cursor);
                 if (response == null || response.getData() == null || response.getData().isEmpty()) {
+                    logger.info("No more markets available. Pagination complete.");
                     break;
                 }
                 
@@ -90,11 +91,19 @@ public class PolymarketService {
                 // Save this batch of markets
                 int saved = saveMarkets(response.getData());
                 totalSaved += saved;
+                int batchSize = response.getData().size();
                 
                 logger.info(String.format("Saved %d markets from batch, total saved: %d", saved, totalSaved));
                 
+                // If less than 500 markets returned, we've reached the end of available data
+                if (batchSize < 500) {
+                    logger.info(String.format("Received %d markets (less than 500). All available markets have been fetched.", batchSize));
+                    break;
+                }
+                
                 // If there's no next cursor, we've reached the end
                 if (cursor == null || cursor.isEmpty()) {
+                    logger.info("No next cursor available. Pagination complete.");
                     break;
                 }
                 
