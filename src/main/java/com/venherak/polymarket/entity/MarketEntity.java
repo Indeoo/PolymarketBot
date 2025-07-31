@@ -27,7 +27,7 @@ public class MarketEntity {
     @Column(name = "description", length = 2000)
     private String description;
     
-    @Column(name = "market_slug", unique = true)
+    @Column(name = "market_slug")
     private String marketSlug;
     
     @Column(name = "end_date")
