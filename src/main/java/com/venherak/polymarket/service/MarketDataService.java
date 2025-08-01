@@ -1,6 +1,7 @@
 package com.venherak.polymarket.service;
 
 import com.venherak.polymarket.entity.MarketEntity;
+import com.venherak.polymarket.mapper.MarketMapper;
 import com.venherak.polymarket.model.Market;
 import com.venherak.polymarket.repository.MarketRepository;
 import org.springframework.stereotype.Service;
@@ -20,13 +21,13 @@ public class MarketDataService {
     private static final Logger logger = Logger.getLogger(MarketDataService.class.getName());
     
     private final MarketRepository marketRepository;
-    private final MarketMappingService marketMappingService;
+    private final MarketMapper marketMapper;
 
     public MarketDataService(
             MarketRepository marketRepository,
-            MarketMappingService marketMappingService) {
+            MarketMapper marketMapper) {
         this.marketRepository = marketRepository;
-        this.marketMappingService = marketMappingService;
+        this.marketMapper = marketMapper;
     }
 
     /**
@@ -42,7 +43,7 @@ public class MarketDataService {
         }
         
         try {
-            List<MarketEntity> entities = marketMappingService.toEntities(markets);
+            List<MarketEntity> entities = marketMapper.toEntities(markets);
             List<MarketEntity> savedEntities = marketRepository.saveAll(entities);
             return savedEntities.size();
         } catch (Exception e) {
@@ -58,7 +59,7 @@ public class MarketDataService {
      */
     public List<Market> getAllMarkets() {
         List<MarketEntity> entities = marketRepository.findAll();
-        return marketMappingService.toModels(entities);
+        return marketMapper.toModels(entities);
     }
     
     /**
@@ -68,7 +69,7 @@ public class MarketDataService {
      */
     public List<Market> getActiveMarkets() {
         List<MarketEntity> entities = marketRepository.findByActiveTrue();
-        return marketMappingService.toModels(entities);
+        return marketMapper.toModels(entities);
     }
     
     /**

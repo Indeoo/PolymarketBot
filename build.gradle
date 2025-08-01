@@ -19,6 +19,7 @@ repositories {
 
 ext {
 	set('springAiVersion', "1.0.0")
+	set('mapstructVersion', "1.6.0")
 }
 
 dependencies {
@@ -26,6 +27,11 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.flywaydb:flyway-core'
 	implementation 'org.flywaydb:flyway-database-postgresql'
+	
+	// MapStruct dependencies
+	implementation "org.mapstruct:mapstruct:${mapstructVersion}"
+	annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
+	
 	//implementation 'org.springframework.ai:spring-ai-starter-model-anthropic'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	runtimeOnly 'org.postgresql:postgresql'
