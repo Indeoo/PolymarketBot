@@ -6,6 +6,7 @@ import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 
 import java.time.OffsetDateTime;
+import java.util.List;
 
 /**
  * Elasticsearch document representing a Polymarket market.
@@ -89,14 +90,14 @@ public class MarketDocument {
     @Field(type = FieldType.Boolean)
     private Boolean is5050Outcome;
     
-    @Field(type = FieldType.Text)
-    private String tagsJson;
+    @Field(type = FieldType.Keyword)
+    private List<String> tags;
     
-    @Field(type = FieldType.Text)
-    private String tokensJson;
+    @Field(type = FieldType.Nested)
+    private List<TokenDocument> tokens;
     
-    @Field(type = FieldType.Text)
-    private String rewardsJson;
+    @Field(type = FieldType.Object)
+    private RewardsDocument rewards;
     
     @Field(type = FieldType.Date)
     private OffsetDateTime createdAt;
@@ -311,28 +312,28 @@ public class MarketDocument {
         this.is5050Outcome = is5050Outcome;
     }
 
-    public String getTagsJson() {
-        return tagsJson;
+    public List<String> getTags() {
+        return tags;
     }
 
-    public void setTagsJson(String tagsJson) {
-        this.tagsJson = tagsJson;
+    public void setTags(List<String> tags) {
+        this.tags = tags;
     }
 
-    public String getTokensJson() {
-        return tokensJson;
+    public List<TokenDocument> getTokens() {
+        return tokens;
     }
 
-    public void setTokensJson(String tokensJson) {
-        this.tokensJson = tokensJson;
+    public void setTokens(List<TokenDocument> tokens) {
+        this.tokens = tokens;
     }
 
-    public String getRewardsJson() {
-        return rewardsJson;
+    public RewardsDocument getRewards() {
+        return rewards;
     }
 
-    public void setRewardsJson(String rewardsJson) {
-        this.rewardsJson = rewardsJson;
+    public void setRewards(RewardsDocument rewards) {
+        this.rewards = rewards;
     }
 
     public OffsetDateTime getCreatedAt() {

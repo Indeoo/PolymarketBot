@@ -75,4 +75,96 @@ public interface MarketDocumentRepository extends ElasticsearchRepository<Market
      * @return list of markets matching the criteria
      */
     List<MarketDocument> findByActiveTrueAndClosedFalse();
+    
+    /**
+     * Find markets with non-null rewards.
+     * 
+     * @return list of markets that have rewards
+     */
+    List<MarketDocument> findByRewardsIsNotNull();
+    
+    /**
+     * Find markets with in-game multiplier greater than specified value.
+     * 
+     * @param multiplier the minimum multiplier value
+     * @return list of markets with high reward multipliers
+     */
+    List<MarketDocument> findByRewardsInGameMultiplierGreaterThan(Double multiplier);
+    
+    /**
+     * Find markets with in-game multiplier between specified values.
+     * 
+     * @param minMultiplier minimum multiplier value
+     * @param maxMultiplier maximum multiplier value
+     * @return list of markets with multipliers in range
+     */
+    List<MarketDocument> findByRewardsInGameMultiplierBetween(Double minMultiplier, Double maxMultiplier);
+    
+    /**
+     * Find active markets with rewards.
+     * 
+     * @return list of active markets that have rewards
+     */
+    List<MarketDocument> findByActiveTrueAndRewardsIsNotNull();
+    
+    /**
+     * Find markets with minimum reward size greater than specified value.
+     * 
+     * @param minSize the minimum reward size
+     * @return list of markets with high minimum reward sizes
+     */
+    List<MarketDocument> findByRewardsMinSizeGreaterThan(Integer minSize);
+    
+    /**
+     * Find markets by reward epoch.
+     * 
+     * @param epoch the reward epoch
+     * @return list of markets in the specified reward epoch
+     */
+    List<MarketDocument> findByRewardsRewardEpoch(Integer epoch);
+    
+    /**
+     * Find markets with specific token outcome.
+     * 
+     * @param outcome the token outcome to search for
+     * @return list of markets with tokens having the specified outcome
+     */
+    List<MarketDocument> findByTokensOutcome(String outcome);
+    
+    /**
+     * Find markets with token price greater than specified value.
+     * 
+     * @param price the minimum token price
+     * @return list of markets with high-priced tokens
+     */
+    List<MarketDocument> findByTokensPriceGreaterThan(Double price);
+    
+    /**
+     * Find markets with winning tokens.
+     * 
+     * @return list of markets that have winning tokens
+     */
+    List<MarketDocument> findByTokensWinnerTrue();
+    
+    /**
+     * Find markets by tag.
+     * 
+     * @param tag the tag to search for
+     * @return list of markets with the specified tag
+     */
+    List<MarketDocument> findByTagsContaining(String tag);
+    
+    /**
+     * Count markets with rewards.
+     * 
+     * @return number of markets that have rewards
+     */
+    long countByRewardsIsNotNull();
+    
+    /**
+     * Count active markets with rewards.
+     * 
+     * @return number of active markets that have rewards
+     */
+    long countByActiveTrueAndRewardsIsNotNull();
 }

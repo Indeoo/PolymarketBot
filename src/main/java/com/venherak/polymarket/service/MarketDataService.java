@@ -128,4 +128,96 @@ public class MarketDataService {
         List<MarketDocument> documents = marketDocumentRepository.findByActiveTrueAndClosedFalse();
         return marketMapper.toModels(documents);
     }
+    
+    /**
+     * Get all markets that have rewards.
+     * 
+     * @return List of markets with rewards
+     */
+    public List<Market> getMarketsWithRewards() {
+        List<MarketDocument> documents = marketDocumentRepository.findByRewardsIsNotNull();
+        return marketMapper.toModels(documents);
+    }
+    
+    /**
+     * Get markets with high reward multipliers.
+     * 
+     * @param minMultiplier minimum multiplier value
+     * @return List of markets with reward multipliers above the threshold
+     */
+    public List<Market> getMarketsWithHighRewardMultiplier(double minMultiplier) {
+        List<MarketDocument> documents = marketDocumentRepository.findByRewardsInGameMultiplierGreaterThan(minMultiplier);
+        return marketMapper.toModels(documents);
+    }
+    
+    /**
+     * Get active markets that have rewards.
+     * 
+     * @return List of active markets with rewards
+     */
+    public List<Market> getActiveMarketsWithRewards() {
+        List<MarketDocument> documents = marketDocumentRepository.findByActiveTrueAndRewardsIsNotNull();
+        return marketMapper.toModels(documents);
+    }
+    
+    /**
+     * Get markets by reward epoch.
+     * 
+     * @param epoch the reward epoch
+     * @return List of markets in the specified reward epoch
+     */
+    public List<Market> getMarketsByRewardEpoch(int epoch) {
+        List<MarketDocument> documents = marketDocumentRepository.findByRewardsRewardEpoch(epoch);
+        return marketMapper.toModels(documents);
+    }
+    
+    /**
+     * Get markets with specific tag.
+     * 
+     * @param tag the tag to search for
+     * @return List of markets with the specified tag
+     */
+    public List<Market> getMarketsByTag(String tag) {
+        List<MarketDocument> documents = marketDocumentRepository.findByTagsContaining(tag);
+        return marketMapper.toModels(documents);
+    }
+    
+    /**
+     * Get markets with winning tokens.
+     * 
+     * @return List of markets that have winning tokens
+     */
+    public List<Market> getMarketsWithWinningTokens() {
+        List<MarketDocument> documents = marketDocumentRepository.findByTokensWinnerTrue();
+        return marketMapper.toModels(documents);
+    }
+    
+    /**
+     * Get markets with high-priced tokens.
+     * 
+     * @param minPrice minimum token price
+     * @return List of markets with tokens above the price threshold
+     */
+    public List<Market> getMarketsWithHighPricedTokens(double minPrice) {
+        List<MarketDocument> documents = marketDocumentRepository.findByTokensPriceGreaterThan(minPrice);
+        return marketMapper.toModels(documents);
+    }
+    
+    /**
+     * Get count of markets with rewards.
+     * 
+     * @return Number of markets that have rewards
+     */
+    public long getMarketsWithRewardsCount() {
+        return marketDocumentRepository.countByRewardsIsNotNull();
+    }
+    
+    /**
+     * Get count of active markets with rewards.
+     * 
+     * @return Number of active markets that have rewards
+     */
+    public long getActiveMarketsWithRewardsCount() {
+        return marketDocumentRepository.countByActiveTrueAndRewardsIsNotNull();
+    }
 }

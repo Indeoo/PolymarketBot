@@ -1,0 +1,5 @@
+### Elasticsearch Queries for Polymarket Markets
+### Base URL: http://localhost:9200
+
+### 1. Check Elasticsearch cluster health
+GET http://localhost:9200/_cluster/health

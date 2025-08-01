@@ -1,11 +1,10 @@
 package com.venherak.polymarket.mapper;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.venherak.polymarket.document.MarketDocument;
+import com.venherak.polymarket.document.RewardsDocument;
+import com.venherak.polymarket.document.TokenDocument;
 import com.venherak.polymarket.model.Market;
 import org.mapstruct.*;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
@@ -27,8 +26,6 @@ public abstract class MarketMapper {
     
     private static final Logger logger = Logger.getLogger(MarketMapper.class.getName());
     
-    @Autowired
-    protected ObjectMapper objectMapper;
 
     // Mapping from Market to MarketDocument
     @Mapping(target = "id", expression = "java(generateDocumentId(market))")
@@ -37,9 +34,9 @@ public abstract class MarketMapper {
     @Mapping(target = "endDate", source = "endDateIso", qualifiedByName = "stringToOffsetDateTime")
     @Mapping(target = "gameStartTime", source = "gameStartTime", qualifiedByName = "stringToOffsetDateTime")
     @Mapping(target = "acceptingOrderTimestamp", source = "acceptingOrderTimestamp", qualifiedByName = "stringToOffsetDateTime")
-    @Mapping(target = "tagsJson", source = "tags", qualifiedByName = "listToJson")
-    @Mapping(target = "tokensJson", source = "tokens", qualifiedByName = "tokensToJson")
-    @Mapping(target = "rewardsJson", source = "rewards", qualifiedByName = "rewardsToJson")
+    @Mapping(target = "tags", source = "tags")
+    @Mapping(target = "tokens", source = "tokens", qualifiedByName = "tokensToDocuments")
+    @Mapping(target = "rewards", source = "rewards", qualifiedByName = "rewardsToDocument")
     @Mapping(target = "active", source = "active")
     @Mapping(target = "closed", source = "closed")
     @Mapping(target = "archived", source = "archived")
@@ -54,9 +51,9 @@ public abstract class MarketMapper {
     @Mapping(target = "endDateIso", source = "endDate", qualifiedByName = "offsetDateTimeToString")
     @Mapping(target = "gameStartTime", source = "gameStartTime", qualifiedByName = "offsetDateTimeToString")
     @Mapping(target = "acceptingOrderTimestamp", source = "acceptingOrderTimestamp", qualifiedByName = "offsetDateTimeToString")
-    @Mapping(target = "tags", source = "tagsJson", qualifiedByName = "jsonToStringList")
-    @Mapping(target = "tokens", source = "tokensJson", qualifiedByName = "jsonToTokenList")
-    @Mapping(target = "rewards", source = "rewardsJson", qualifiedByName = "jsonToRewards")
+    @Mapping(target = "tags", source = "tags")
+    @Mapping(target = "tokens", source = "tokens", qualifiedByName = "documentsToTokens")
+    @Mapping(target = "rewards", source = "rewards", qualifiedByName = "documentToRewards")
     public abstract Market toModel(MarketDocument document);
 
     // List mappings
@@ -101,83 +98,99 @@ public abstract class MarketMapper {
         return dateTime.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
     }
 
-    @Named("listToJson")
-    protected String listToJson(List<String> list) {
-        if (list == null) {
-            return null;
-        }
-        try {
-            return objectMapper.writeValueAsString(list);
-        } catch (JsonProcessingException e) {
-            logger.log(Level.SEVERE, "Error serializing list to JSON: " + e.getMessage(), e);
-            return null;
-        }
-    }
-
-    @Named("tokensToJson")
-    protected String tokensToJson(List<Market.Token> tokens) {
-        if (tokens == null) {
-            return null;
-        }
-        try {
-            return objectMapper.writeValueAsString(tokens);
-        } catch (JsonProcessingException e) {
-            logger.log(Level.SEVERE, "Error serializing tokens to JSON: " + e.getMessage(), e);
-            return null;
-        }
-    }
-
-    @Named("rewardsToJson")
-    protected String rewardsToJson(Market.Rewards rewards) {
+    // Object mappings for nested types
+    
+    @Named("rewardsToDocument")
+    protected RewardsDocument rewardsToDocument(Market.Rewards rewards) {
         if (rewards == null) {
             return null;
         }
-        try {
-            return objectMapper.writeValueAsString(rewards);
-        } catch (JsonProcessingException e) {
-            logger.log(Level.SEVERE, "Error serializing rewards to JSON: " + e.getMessage(), e);
-            return null;
+        
+        RewardsDocument document = new RewardsDocument();
+        document.setMinSize(rewards.getMinSize());
+        document.setMaxSpread(rewards.getMaxSpread());
+        document.setInGameMultiplier(rewards.getInGameMultiplier());
+        document.setRewardEpoch(rewards.getRewardEpoch());
+        
+        // Parse date strings to OffsetDateTime
+        if (rewards.getEventStartDate() != null && !rewards.getEventStartDate().isEmpty()) {
+            document.setEventStartDate(stringToOffsetDateTime(rewards.getEventStartDate()));
         }
+        if (rewards.getEventEndDate() != null && !rewards.getEventEndDate().isEmpty()) {
+            document.setEventEndDate(stringToOffsetDateTime(rewards.getEventEndDate()));
+        }
+        
+        return document;
     }
-
-    @Named("jsonToStringList")
-    protected List<String> jsonToStringList(String json) {
-        if (json == null || json.isEmpty()) {
+    
+    @Named("documentToRewards")
+    protected Market.Rewards documentToRewards(RewardsDocument document) {
+        if (document == null) {
             return null;
         }
-        try {
-            return objectMapper.readValue(json, 
-                objectMapper.getTypeFactory().constructCollectionType(List.class, String.class));
-        } catch (JsonProcessingException e) {
-            logger.log(Level.SEVERE, "Error deserializing JSON to string list: " + e.getMessage(), e);
-            return null;
+        
+        Market.Rewards rewards = new Market.Rewards();
+        rewards.setMinSize(document.getMinSize() != null ? document.getMinSize() : 0);
+        rewards.setMaxSpread(document.getMaxSpread() != null ? document.getMaxSpread() : 0);
+        rewards.setInGameMultiplier(document.getInGameMultiplier() != null ? document.getInGameMultiplier() : 0.0);
+        rewards.setRewardEpoch(document.getRewardEpoch() != null ? document.getRewardEpoch() : 0);
+        
+        // Convert OffsetDateTime back to strings
+        if (document.getEventStartDate() != null) {
+            rewards.setEventStartDate(offsetDateTimeToString(document.getEventStartDate()));
         }
+        if (document.getEventEndDate() != null) {
+            rewards.setEventEndDate(offsetDateTimeToString(document.getEventEndDate()));
+        }
+        
+        return rewards;
     }
-
-    @Named("jsonToTokenList")
-    protected List<Market.Token> jsonToTokenList(String json) {
-        if (json == null || json.isEmpty()) {
+    
+    protected TokenDocument tokenToDocument(Market.Token token) {
+        if (token == null) {
             return null;
         }
-        try {
-            return objectMapper.readValue(json, 
-                objectMapper.getTypeFactory().constructCollectionType(List.class, Market.Token.class));
-        } catch (JsonProcessingException e) {
-            logger.log(Level.SEVERE, "Error deserializing JSON to token list: " + e.getMessage(), e);
-            return null;
-        }
+        
+        TokenDocument document = new TokenDocument();
+        document.setTokenId(token.getTokenId());
+        document.setOutcome(token.getOutcome());
+        document.setPrice(token.getPrice());
+        document.setWinner(token.isWinner());
+        
+        return document;
     }
-
-    @Named("jsonToRewards")
-    protected Market.Rewards jsonToRewards(String json) {
-        if (json == null || json.isEmpty()) {
+    
+    protected Market.Token documentToToken(TokenDocument document) {
+        if (document == null) {
             return null;
         }
-        try {
-            return objectMapper.readValue(json, Market.Rewards.class);
-        } catch (JsonProcessingException e) {
-            logger.log(Level.SEVERE, "Error deserializing JSON to rewards: " + e.getMessage(), e);
+        
+        Market.Token token = new Market.Token();
+        token.setTokenId(document.getTokenId());
+        token.setOutcome(document.getOutcome());
+        token.setPrice(document.getPrice() != null ? document.getPrice() : 0.0);
+        token.setWinner(document.getWinner() != null ? document.getWinner() : false);
+        
+        return token;
+    }
+    
+    @Named("tokensToDocuments")
+    protected List<TokenDocument> tokensToDocuments(List<Market.Token> tokens) {
+        if (tokens == null) {
             return null;
         }
+        return tokens.stream()
+                .map(this::tokenToDocument)
+                .collect(java.util.stream.Collectors.toList());
+    }
+    
+    @Named("documentsToTokens")
+    protected List<Market.Token> documentsToTokens(List<TokenDocument> documents) {
+        if (documents == null) {
+            return null;
+        }
+        return documents.stream()
+                .map(this::documentToToken)
+                .collect(java.util.stream.Collectors.toList());
     }
 }

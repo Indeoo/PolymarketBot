@@ -1,0 +1,572 @@
+### 2. Check if polymarket-markets index exists
+GET http://localhost:9200/polymarket-markets
+
+###
+
+### 3. Get index mapping for polymarket-markets
+GET http://localhost:9200/polymarket-markets/_mapping
+
+###
+
+### 4. Get index settings
+GET http://localhost:9200/polymarket-markets/_settings
+
+###
+
+### 5. Count total documents in the index
+GET http://localhost:9200/polymarket-markets/_count
+
+###
+
+### 6. Get all markets (limited to 10 for testing)
+GET http://localhost:9200/polymarket-markets/_search
+Content-Type: application/json
+
+{
+  "size": 10,
+  "query": {
+    "match_all": {}
+  }
+}
+
+###
+
+### 7. Search active markets only
+GET http://localhost:9200/polymarket-markets/_search
+Content-Type: application/json
+
+{
+  "query": {
+    "term": {
+      "active": true
+    }
+  }
+}
+
+###
+
+### 8. Search markets that are active and not closed
+GET http://localhost:9200/polymarket-markets/_search
+Content-Type: application/json
+
+{
+  "query": {
+    "bool": {
+      "must": [
+        {"term": {"active": true}},
+        {"term": {"closed": false}}
+      ]
+    }
+  }
+}
+
+###
+
+### 9. Full-text search in question field
+GET http://localhost:9200/polymarket-markets/_search
+Content-Type: application/json
+
+{
+  "query": {
+    "match": {
+      "question": "Trump"
+    }
+  }
+}
+
+###
+
+### 10. Full-text search in description field
+GET http://localhost:9200/polymarket-markets/_search
+Content-Type: application/json
+
+{
+  "query": {
+    "match": {
+      "description": "election"
+    }
+  }
+}
+
+###
+
+### 11. Multi-field search (question OR description)
+GET http://localhost:9200/polymarket-markets/_search
+Content-Type: application/json
+
+{
+  "query": {
+    "multi_match": {
+      "query": "Bitcoin",
+      "fields": ["question", "description"]
+    }
+  }
+}
+
+###
+
+### 12. Search by specific condition_id
+GET http://localhost:9200/polymarket-markets/_search
+Content-Type: application/json
+
+{
+  "query": {
+    "term": {
+      "conditionId": "0x123456789"
+    }
+  }
+}
+
+###
+
+### 13. Search by market slug
+GET http://localhost:9200/polymarket-markets/_search
+Content-Type: application/json
+
+{
+  "query": {
+    "term": {
+      "marketSlug": "will-trump-win-2024"
+    }
+  }
+}
+
+###
+
+### 14. Date range query - markets ending in the next 30 days
+GET http://localhost:9200/polymarket-markets/_search
+Content-Type: application/json
+
+{
+  "query": {
+    "range": {
+      "endDate": {
+        "gte": "now",
+        "lte": "now+30d"
+      }
+    }
+  }
+}
+
+###
+
+### 15. Aggregation - count markets by active status
+GET http://localhost:9200/polymarket-markets/_search
+Content-Type: application/json
+
+{
+  "size": 0,
+  "aggs": {
+    "by_active_status": {
+      "terms": {
+        "field": "active"
+      }
+    }
+  }
+}
+
+###
+
+### 16. Aggregation - count markets by closed status
+GET http://localhost:9200/polymarket-markets/_search
+Content-Type: application/json
+
+{
+  "size": 0,
+  "aggs": {
+    "by_closed_status": {
+      "terms": {
+        "field": "closed"
+      }
+    }
+  }
+}
+
+###
+
+### 17. Complex query - active markets with high minimum order size
+GET http://localhost:9200/polymarket-markets/_search
+Content-Type: application/json
+
+{
+  "query": {
+    "bool": {
+      "must": [
+        {"term": {"active": true}},
+        {"range": {"minimumOrderSize": {"gte": 1000}}}
+      ]
+    }
+  }
+}
+
+###
+
+### 18. Fuzzy search in question field
+GET http://localhost:9200/polymarket-markets/_search
+Content-Type: application/json
+
+{
+  "query": {
+    "fuzzy": {
+      "question": {
+        "value": "elecshun",
+        "fuzziness": "AUTO"
+      }
+    }
+  }
+}
+
+###
+
+### 19. Wildcard search in question field
+GET http://localhost:9200/polymarket-markets/_search
+Content-Type: application/json
+
+{
+  "query": {
+    "wildcard": {
+      "question": "*election*"
+    }
+  }
+}
+
+###
+
+### 20. Get markets sorted by end date (ascending)
+GET http://localhost:9200/polymarket-markets/_search
+Content-Type: application/json
+
+{
+  "query": {
+    "match_all": {}
+  },
+  "sort": [
+    {
+      "endDate": {
+        "order": "asc"
+      }
+    }
+  ],
+  "size": 10
+}
+
+###
+
+### 21. Get markets sorted by creation date (descending)
+GET http://localhost:9200/polymarket-markets/_search
+Content-Type: application/json
+
+{
+  "query": {
+    "match_all": {}
+  },
+  "sort": [
+    {
+      "createdAt": {
+        "order": "desc"
+      }
+    }
+  ],
+  "size": 10
+}
+
+###
+
+### 22. Get a specific document by ID
+GET http://localhost:9200/polymarket-markets/_doc/YOUR_DOCUMENT_ID_HERE
+
+###
+
+### 23. Delete the entire index (DANGEROUS - use with caution)
+# DELETE http://localhost:9200/polymarket-markets
+
+###
+
+### 24. Create index with custom settings (if needed)
+# PUT http://localhost:9200/polymarket-markets
+# Content-Type: application/json
+#
+# {
+#   "settings": {
+#     "number_of_shards": 1,
+#     "number_of_replicas": 0
+#   }
+# }
+
+###
+
+### 25. Find markets with non-null rewards (NATIVE OBJECT QUERY)
+GET http://localhost:9200/polymarket-markets/_search
+Content-Type: application/json
+
+{
+  "query": {
+    "exists": {
+      "field": "rewards"
+    }
+  }
+}
+
+###
+
+### 26. Find markets with reward multiplier greater than 1.0 (NATIVE FIELD QUERY)
+GET http://localhost:9200/polymarket-markets/_search
+Content-Type: application/json
+
+{
+  "query": {
+    "range": {
+      "rewards.inGameMultiplier": {
+        "gt": 1.0
+      }
+    }
+  }
+}
+
+###
+
+### 27. Find markets with high reward rate (in_game_multiplier > 1.5)
+GET http://localhost:9200/polymarket-markets/_search
+Content-Type: application/json
+
+{
+  "query": {
+    "range": {
+      "rewards.inGameMultiplier": {
+        "gt": 1.5
+      }
+    }
+  }
+}
+
+###
+
+### 28. Find active markets with rewards (OPTIMIZED NATIVE QUERY)
+GET http://localhost:9200/polymarket-markets/_search
+Content-Type: application/json
+
+{
+  "query": {
+    "bool": {
+      "must": [
+        {"term": {"active": true}},
+        {"exists": {"field": "rewards"}}
+      ]
+    }
+  }
+}
+
+###
+
+### 29. Aggregation - count markets with and without rewards (NATIVE)
+GET http://localhost:9200/polymarket-markets/_search
+Content-Type: application/json
+
+{
+  "size": 0,
+  "aggs": {
+    "rewards_status": {
+      "filters": {
+        "filters": {
+          "with_rewards": {
+            "exists": {"field": "rewards"}
+          },
+          "without_rewards": {
+            "bool": {
+              "must_not": {
+                "exists": {"field": "rewards"}
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+###
+
+### 30. Find markets with reward multiplier in specific range
+GET http://localhost:9200/polymarket-markets/_search
+Content-Type: application/json
+
+{
+  "query": {
+    "range": {
+      "rewards.inGameMultiplier": {
+        "gte": 1.0,
+        "lte": 2.0
+      }
+    }
+  }
+}
+
+###
+
+### 31. Find markets by reward epoch
+GET http://localhost:9200/polymarket-markets/_search
+Content-Type: application/json
+
+{
+  "query": {
+    "term": {
+      "rewards.rewardEpoch": 1
+    }
+  }
+}
+
+###
+
+### 32. Find markets with high minimum reward size
+GET http://localhost:9200/polymarket-markets/_search
+Content-Type: application/json
+
+{
+  "query": {
+    "range": {
+      "rewards.minSize": {
+        "gte": 1000
+      }
+    }
+  }
+}
+
+###
+
+### 33. Find markets with winning tokens (NESTED QUERY)
+GET http://localhost:9200/polymarket-markets/_search
+Content-Type: application/json
+
+{
+  "query": {
+    "nested": {
+      "path": "tokens",
+      "query": {
+        "term": {
+          "tokens.winner": true
+        }
+      }
+    }
+  }
+}
+
+###
+
+### 34. Find markets with high-priced tokens
+GET http://localhost:9200/polymarket-markets/_search
+Content-Type: application/json
+
+{
+  "query": {
+    "nested": {
+      "path": "tokens",
+      "query": {
+        "range": {
+          "tokens.price": {
+            "gte": 0.8
+          }
+        }
+      }
+    }
+  }
+}
+
+###
+
+### 35. Find markets by specific tag
+GET http://localhost:9200/polymarket-markets/_search
+Content-Type: application/json
+
+{
+  "query": {
+    "term": {
+      "tags": "politics"
+    }
+  }
+}
+
+###
+
+### 36. Find markets with rewards and sort by reward multiplier (descending)
+GET http://localhost:9200/polymarket-markets/_search
+Content-Type: application/json
+
+{
+  "query": {
+    "exists": {
+      "field": "rewards"
+    }
+  },
+  "sort": [
+    {"rewards.inGameMultiplier": {"order": "desc"}}
+  ],
+  "size": 20
+}
+
+###
+
+### 37. Complex query: Active markets with high rewards and specific tags
+GET http://localhost:9200/polymarket-markets/_search
+Content-Type: application/json
+
+{
+  "query": {
+    "bool": {
+      "must": [
+        {"term": {"active": true}},
+        {"range": {"rewards.inGameMultiplier": {"gte": 1.2}}},
+        {"terms": {"tags": ["politics", "election", "crypto"]}}
+      ]
+    }
+  },
+  "sort": [
+    {"rewards.inGameMultiplier": {"order": "desc"}},
+    {"endDate": {"order": "asc"}}
+  ]
+}
+
+###
+
+### 38. Aggregation - statistics on reward multipliers
+GET http://localhost:9200/polymarket-markets/_search
+Content-Type: application/json
+
+{
+  "size": 0,
+  "query": {
+    "exists": {
+      "field": "rewards"
+    }
+  },
+  "aggs": {
+    "reward_multiplier_stats": {
+      "stats": {
+        "field": "rewards.inGameMultiplier"
+      }
+    },
+    "multiplier_ranges": {
+      "range": {
+        "field": "rewards.inGameMultiplier",
+        "ranges": [
+          {"to": 1.0},
+          {"from": 1.0, "to": 1.5},
+          {"from": 1.5, "to": 2.0},
+          {"from": 2.0}
+        ]
+      }
+    }
+  }
+}
+
+###
+
+### 32. Bulk index sample data (for testing)
+# POST http://localhost:9200/polymarket-markets/_bulk
+# Content-Type: application/json
+#
+# {"index": {"_id": "test-1"}}
+# {"question": "Will it rain tomorrow?", "description": "Weather prediction market", "active": true, "closed": false}
+# {"index": {"_id": "test-2"}}
+# {"question": "Will Bitcoin reach $100k?", "description": "Cryptocurrency price prediction", "active": true, "closed": false}
+
+###
