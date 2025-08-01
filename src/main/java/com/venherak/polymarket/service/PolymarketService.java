@@ -1,8 +1,8 @@
 package com.venherak.polymarket.service;
 
-import com.venherak.polymarket.client.PolymarketApiClient;
-import com.venherak.polymarket.model.Market;
-import com.venherak.polymarket.model.MarketsResponse;
+import com.venherak.polymarket.infrastructure.client.PolymarketApiClient;
+import com.venherak.polymarket.domain.model.Market;
+import com.venherak.polymarket.domain.model.MarketsResponse;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

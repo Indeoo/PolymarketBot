@@ -1,6 +1,6 @@
-package com.venherak.polymarket.repository;
+package com.venherak.polymarket.infrastructure.persistence.repository;
 
-import com.venherak.polymarket.document.MarketDocument;
+import com.venherak.polymarket.infrastructure.persistence.document.MarketDocument;
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 import org.springframework.stereotype.Repository;
 

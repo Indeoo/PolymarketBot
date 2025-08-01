@@ -1,9 +1,9 @@
 package com.venherak.polymarket.service;
 
-import com.venherak.polymarket.document.MarketDocument;
+import com.venherak.polymarket.infrastructure.persistence.document.MarketDocument;
 import com.venherak.polymarket.mapper.MarketMapper;
-import com.venherak.polymarket.model.Market;
-import com.venherak.polymarket.repository.MarketDocumentRepository;
+import com.venherak.polymarket.domain.model.Market;
+import com.venherak.polymarket.infrastructure.persistence.repository.MarketDocumentRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

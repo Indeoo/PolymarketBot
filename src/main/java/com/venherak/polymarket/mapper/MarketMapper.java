@@ -1,10 +1,10 @@
 package com.venherak.polymarket.mapper;
 
-import com.venherak.polymarket.document.MarketDocument;
-import com.venherak.polymarket.document.RateDocument;
-import com.venherak.polymarket.document.RewardsDocument;
-import com.venherak.polymarket.document.TokenDocument;
-import com.venherak.polymarket.model.Market;
+import com.venherak.polymarket.infrastructure.persistence.document.MarketDocument;
+import com.venherak.polymarket.infrastructure.persistence.document.RateDocument;
+import com.venherak.polymarket.infrastructure.persistence.document.RewardsDocument;
+import com.venherak.polymarket.infrastructure.persistence.document.TokenDocument;
+import com.venherak.polymarket.domain.model.Market;
 import org.mapstruct.*;
 
 import java.time.OffsetDateTime;

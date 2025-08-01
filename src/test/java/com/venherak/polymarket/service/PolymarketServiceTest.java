@@ -1,7 +1,7 @@
 package com.venherak.polymarket.service;
 
-import com.venherak.polymarket.client.PolymarketApiClient;
-import com.venherak.polymarket.model.MarketsResponse;
+import com.venherak.polymarket.infrastructure.client.PolymarketApiClient;
+import com.venherak.polymarket.domain.model.MarketsResponse;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

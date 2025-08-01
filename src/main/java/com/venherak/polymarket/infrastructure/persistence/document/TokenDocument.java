@@ -1,4 +1,4 @@
-package com.venherak.polymarket.document;
+package com.venherak.polymarket.infrastructure.persistence.document;
 
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;

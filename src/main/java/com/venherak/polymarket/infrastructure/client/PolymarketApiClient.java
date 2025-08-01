@@ -1,6 +1,6 @@
-package com.venherak.polymarket.client;
+package com.venherak.polymarket.infrastructure.client;
 
-import com.venherak.polymarket.model.MarketsResponse;
+import com.venherak.polymarket.domain.model.MarketsResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;

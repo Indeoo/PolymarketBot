@@ -1,4 +1,4 @@
-package com.venherak.polymarket.model;
+package com.venherak.polymarket.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
