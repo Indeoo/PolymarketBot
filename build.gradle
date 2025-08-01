@@ -23,10 +23,14 @@ ext {
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	// Elasticsearch instead of JPA
+	implementation 'org.springframework.boot:spring-boot-starter-data-elasticsearch'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.flywaydb:flyway-core'
-	implementation 'org.flywaydb:flyway-database-postgresql'
+	
+	// Keep JPA dependencies for now during transition (can be removed later)
+//	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+//	implementation 'org.flywaydb:flyway-core'
+//	implementation 'org.flywaydb:flyway-database-postgresql'
 	
 	// MapStruct dependencies
 	implementation "org.mapstruct:mapstruct:${mapstructVersion}"

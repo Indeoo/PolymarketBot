@@ -1,124 +1,121 @@
-package com.venherak.polymarket.entity;
+package com.venherak.polymarket.document;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.*;
-import java.time.LocalDateTime;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.elasticsearch.annotations.Document;
+import org.springframework.data.elasticsearch.annotations.Field;
+import org.springframework.data.elasticsearch.annotations.FieldType;
+
 import java.time.OffsetDateTime;
 
 /**
- * JPA entity representing a Polymarket market.
+ * Elasticsearch document representing a Polymarket market.
+ * Stores market data in Elasticsearch index for fast search and analytics.
  */
-@Entity
-@Table(name = "markets")
-public class MarketEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+@Document(indexName = "polymarket-markets")
+public class MarketDocument {
     
-    @Column(name = "condition_id")
+    @Id
+    private String id;
+    
+    @Field(type = FieldType.Keyword)
     private String conditionId;
     
-    @Column(name = "question_id")
+    @Field(type = FieldType.Keyword)
     private String questionId;
     
-    @Column(name = "question", length = 1000)
+    @Field(type = FieldType.Text, analyzer = "standard")
     private String question;
     
-    @Column(name = "description", length = 2000)
+    @Field(type = FieldType.Text, analyzer = "standard")
     private String description;
     
-    @Column(name = "market_slug")
+    @Field(type = FieldType.Keyword)
     private String marketSlug;
     
-    @Column(name = "end_date")
+    @Field(type = FieldType.Date)
     private OffsetDateTime endDate;
     
-    @Column(name = "game_start_time")
+    @Field(type = FieldType.Date)
     private OffsetDateTime gameStartTime;
     
-    @Column(name = "seconds_delay")
+    @Field(type = FieldType.Integer)
     private Integer secondsDelay;
     
-    @Column(name = "fpmm")
+    @Field(type = FieldType.Keyword)
     private String fpmm;
     
-    @Column(name = "maker_base_fee")
+    @Field(type = FieldType.Integer)
     private Integer makerBaseFee;
     
-    @Column(name = "taker_base_fee")
+    @Field(type = FieldType.Integer)
     private Integer takerBaseFee;
     
-    @Column(name = "minimum_order_size")
+    @Field(type = FieldType.Integer)
     private Integer minimumOrderSize;
     
-    @Column(name = "minimum_tick_size")
+    @Field(type = FieldType.Double)
     private Double minimumTickSize;
     
-    @Column(name = "active")
+    @Field(type = FieldType.Boolean)
     private Boolean active;
     
-    @Column(name = "closed")
+    @Field(type = FieldType.Boolean)
     private Boolean closed;
     
-    @Column(name = "archived")
+    @Field(type = FieldType.Boolean)
     private Boolean archived;
     
-    @Column(name = "accepting_orders")
+    @Field(type = FieldType.Boolean)
     private Boolean acceptingOrders;
     
-    @Column(name = "accepting_order_timestamp")
+    @Field(type = FieldType.Date)
     private OffsetDateTime acceptingOrderTimestamp;
     
-    @Column(name = "enable_order_book")
+    @Field(type = FieldType.Boolean)
     private Boolean enableOrderBook;
     
-    @Column(name = "notifications_enabled")
+    @Field(type = FieldType.Boolean)
     private Boolean notificationsEnabled;
     
-    @Column(name = "neg_risk")
+    @Field(type = FieldType.Boolean)
     private Boolean negRisk;
     
-    @Column(name = "neg_risk_market_id")
+    @Field(type = FieldType.Keyword)
     private String negRiskMarketId;
     
-    @Column(name = "neg_risk_request_id")
+    @Field(type = FieldType.Keyword)
     private String negRiskRequestId;
     
-    @Column(name = "is_50_50_outcome")
+    @Field(type = FieldType.Boolean)
     private Boolean is5050Outcome;
     
-    @Column(name = "tags", length = 1000)
+    @Field(type = FieldType.Text)
     private String tagsJson;
     
-    @Column(name = "tokens_json", length = 2000)
+    @Field(type = FieldType.Text)
     private String tokensJson;
     
-    @Column(name = "rewards_json", length = 1000)
+    @Field(type = FieldType.Text)
     private String rewardsJson;
     
-    @Column(name = "created_at")
-    private LocalDateTime createdAt;
+    @Field(type = FieldType.Date)
+    private OffsetDateTime createdAt;
     
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
-    
-    @PrePersist
-    protected void onCreate() {
-        createdAt = LocalDateTime.now();
-        updatedAt = LocalDateTime.now();
-    }
-    
-    @PreUpdate
-    protected void onUpdate() {
-        updatedAt = LocalDateTime.now();
+    @Field(type = FieldType.Date)
+    private OffsetDateTime updatedAt;
+
+    // Constructors
+    public MarketDocument() {
+        this.createdAt = OffsetDateTime.now();
+        this.updatedAt = OffsetDateTime.now();
     }
 
     // Getters and setters
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -338,19 +335,19 @@ public class MarketEntity {
         this.rewardsJson = rewardsJson;
     }
 
-    public LocalDateTime getCreatedAt() {
+    public OffsetDateTime getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
+    public void setCreatedAt(OffsetDateTime createdAt) {
         this.createdAt = createdAt;
     }
 
-    public LocalDateTime getUpdatedAt() {
+    public OffsetDateTime getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(LocalDateTime updatedAt) {
+    public void setUpdatedAt(OffsetDateTime updatedAt) {
         this.updatedAt = updatedAt;
     }
 }

@@ -2,7 +2,7 @@ package com.venherak.polymarket.mapper;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.venherak.polymarket.entity.MarketEntity;
+import com.venherak.polymarket.document.MarketDocument;
 import com.venherak.polymarket.model.Market;
 import org.mapstruct.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +15,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * MapStruct mapper for converting between Market model and MarketEntity.
+ * MapStruct mapper for converting between Market model and MarketDocument.
  * Handles complex mappings like date conversions and JSON serialization.
  */
 @Mapper(
@@ -30,10 +30,10 @@ public abstract class MarketMapper {
     @Autowired
     protected ObjectMapper objectMapper;
 
-    // Mapping from Market to MarketEntity
-    @Mapping(target = "id", ignore = true)
+    // Mapping from Market to MarketDocument
+    @Mapping(target = "id", expression = "java(generateDocumentId(market))")
     @Mapping(target = "createdAt", ignore = true)
-    @Mapping(target = "updatedAt", ignore = true)
+    @Mapping(target = "updatedAt", expression = "java(java.time.OffsetDateTime.now())")
     @Mapping(target = "endDate", source = "endDateIso", qualifiedByName = "stringToOffsetDateTime")
     @Mapping(target = "gameStartTime", source = "gameStartTime", qualifiedByName = "stringToOffsetDateTime")
     @Mapping(target = "acceptingOrderTimestamp", source = "acceptingOrderTimestamp", qualifiedByName = "stringToOffsetDateTime")
@@ -48,22 +48,37 @@ public abstract class MarketMapper {
     @Mapping(target = "notificationsEnabled", source = "notificationsEnabled")
     @Mapping(target = "negRisk", source = "negRisk")
     @Mapping(target = "is5050Outcome", source = "is5050Outcome")
-    public abstract MarketEntity toEntity(Market market);
+    public abstract MarketDocument toDocument(Market market);
 
-    // Mapping from MarketEntity to Market
+    // Mapping from MarketDocument to Market
     @Mapping(target = "endDateIso", source = "endDate", qualifiedByName = "offsetDateTimeToString")
     @Mapping(target = "gameStartTime", source = "gameStartTime", qualifiedByName = "offsetDateTimeToString")
     @Mapping(target = "acceptingOrderTimestamp", source = "acceptingOrderTimestamp", qualifiedByName = "offsetDateTimeToString")
     @Mapping(target = "tags", source = "tagsJson", qualifiedByName = "jsonToStringList")
     @Mapping(target = "tokens", source = "tokensJson", qualifiedByName = "jsonToTokenList")
     @Mapping(target = "rewards", source = "rewardsJson", qualifiedByName = "jsonToRewards")
-    public abstract Market toModel(MarketEntity entity);
+    public abstract Market toModel(MarketDocument document);
 
     // List mappings
-    public abstract List<MarketEntity> toEntities(List<Market> markets);
-    public abstract List<Market> toModels(List<MarketEntity> entities);
+    public abstract List<MarketDocument> toDocuments(List<Market> markets);
+    public abstract List<Market> toModels(List<MarketDocument> documents);
+
 
     // Custom mapping methods
+    
+    /**
+     * Generate a unique document ID for Elasticsearch.
+     * Uses condition_id if available, otherwise market_slug, otherwise generates UUID.
+     */
+    protected String generateDocumentId(Market market) {
+        if (market.getConditionId() != null && !market.getConditionId().isEmpty()) {
+            return market.getConditionId();
+        }
+        if (market.getMarketSlug() != null && !market.getMarketSlug().isEmpty()) {
+            return market.getMarketSlug();
+        }
+        return java.util.UUID.randomUUID().toString();
+    }
 
     @Named("stringToOffsetDateTime")
     protected OffsetDateTime stringToOffsetDateTime(String dateString) {
