@@ -1,6 +1,7 @@
 package com.venherak.polymarket.mapper;
 
 import com.venherak.polymarket.document.MarketDocument;
+import com.venherak.polymarket.document.RateDocument;
 import com.venherak.polymarket.document.RewardsDocument;
 import com.venherak.polymarket.document.TokenDocument;
 import com.venherak.polymarket.model.Market;
@@ -111,6 +112,7 @@ public abstract class MarketMapper {
         document.setMaxSpread(rewards.getMaxSpread());
         document.setInGameMultiplier(rewards.getInGameMultiplier());
         document.setRewardEpoch(rewards.getRewardEpoch());
+        document.setRates(ratesToDocuments(rewards.getRates()));
         
         // Parse date strings to OffsetDateTime
         if (rewards.getEventStartDate() != null && !rewards.getEventStartDate().isEmpty()) {
@@ -134,6 +136,7 @@ public abstract class MarketMapper {
         rewards.setMaxSpread(document.getMaxSpread() != null ? document.getMaxSpread() : 0);
         rewards.setInGameMultiplier(document.getInGameMultiplier() != null ? document.getInGameMultiplier() : 0.0);
         rewards.setRewardEpoch(document.getRewardEpoch() != null ? document.getRewardEpoch() : 0);
+        rewards.setRates(documentsToRates(document.getRates()));
         
         // Convert OffsetDateTime back to strings
         if (document.getEventStartDate() != null) {
@@ -191,6 +194,48 @@ public abstract class MarketMapper {
         }
         return documents.stream()
                 .map(this::documentToToken)
+                .collect(java.util.stream.Collectors.toList());
+    }
+    
+    protected RateDocument rateToDocument(Market.Rate rate) {
+        if (rate == null) {
+            return null;
+        }
+        
+        RateDocument document = new RateDocument();
+        document.setAssetAddress(rate.getAssetAddress());
+        document.setRewardsDailyRate(rate.getRewardsDailyRate());
+        
+        return document;
+    }
+    
+    protected Market.Rate documentToRate(RateDocument document) {
+        if (document == null) {
+            return null;
+        }
+        
+        Market.Rate rate = new Market.Rate();
+        rate.setAssetAddress(document.getAssetAddress());
+        rate.setRewardsDailyRate(document.getRewardsDailyRate() != null ? document.getRewardsDailyRate() : 0);
+        
+        return rate;
+    }
+    
+    protected List<RateDocument> ratesToDocuments(List<Market.Rate> rates) {
+        if (rates == null) {
+            return null;
+        }
+        return rates.stream()
+                .map(this::rateToDocument)
+                .collect(java.util.stream.Collectors.toList());
+    }
+    
+    protected List<Market.Rate> documentsToRates(List<RateDocument> documents) {
+        if (documents == null) {
+            return null;
+        }
+        return documents.stream()
+                .map(this::documentToRate)
                 .collect(java.util.stream.Collectors.toList());
     }
 }

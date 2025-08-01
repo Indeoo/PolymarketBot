@@ -4,6 +4,7 @@ import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 
 import java.time.OffsetDateTime;
+import java.util.List;
 
 /**
  * Elasticsearch document representing market rewards information.
@@ -28,18 +29,22 @@ public class RewardsDocument {
     
     @Field(type = FieldType.Integer)
     private Integer rewardEpoch;
+    
+    @Field(type = FieldType.Nested)
+    private List<RateDocument> rates;
 
     // Constructors
     public RewardsDocument() {}
 
     public RewardsDocument(Integer minSize, Integer maxSpread, OffsetDateTime eventStartDate, 
-                          OffsetDateTime eventEndDate, Double inGameMultiplier, Integer rewardEpoch) {
+                          OffsetDateTime eventEndDate, Double inGameMultiplier, Integer rewardEpoch, List<RateDocument> rates) {
         this.minSize = minSize;
         this.maxSpread = maxSpread;
         this.eventStartDate = eventStartDate;
         this.eventEndDate = eventEndDate;
         this.inGameMultiplier = inGameMultiplier;
         this.rewardEpoch = rewardEpoch;
+        this.rates = rates;
     }
 
     // Getters and setters
@@ -91,6 +96,14 @@ public class RewardsDocument {
         this.rewardEpoch = rewardEpoch;
     }
 
+    public List<RateDocument> getRates() {
+        return rates;
+    }
+
+    public void setRates(List<RateDocument> rates) {
+        this.rates = rates;
+    }
+
     @Override
     public String toString() {
         return "RewardsDocument{" +
@@ -100,6 +113,7 @@ public class RewardsDocument {
                ", eventEndDate=" + eventEndDate +
                ", inGameMultiplier=" + inGameMultiplier +
                ", rewardEpoch=" + rewardEpoch +
+               ", rates=" + rates +
                '}';
     }
 }

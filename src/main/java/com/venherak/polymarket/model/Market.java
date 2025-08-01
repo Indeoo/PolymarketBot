@@ -106,6 +106,20 @@ public class Market {
     @JsonProperty("tags")
     private List<String> tags;
     
+    // Nested class for rate objects
+    public static class Rate {
+        @JsonProperty("asset_address")
+        private String assetAddress;
+        
+        @JsonProperty("rewards_daily_rate")
+        private int rewardsDailyRate;
+        
+        public String getAssetAddress() { return assetAddress; }
+        public void setAssetAddress(String assetAddress) { this.assetAddress = assetAddress; }
+        public int getRewardsDailyRate() { return rewardsDailyRate; }
+        public void setRewardsDailyRate(int rewardsDailyRate) { this.rewardsDailyRate = rewardsDailyRate; }
+    }
+
     // Nested class for rewards
     public static class Rewards {
         @JsonProperty("min_size")
@@ -126,6 +140,9 @@ public class Market {
         @JsonProperty("reward_epoch")
         private int rewardEpoch;
         
+        @JsonProperty("rates")
+        private List<Rate> rates;
+        
         public int getMinSize() { return minSize; }
         public void setMinSize(int minSize) { this.minSize = minSize; }
         public int getMaxSpread() { return maxSpread; }
@@ -138,6 +155,8 @@ public class Market {
         public void setInGameMultiplier(double inGameMultiplier) { this.inGameMultiplier = inGameMultiplier; }
         public int getRewardEpoch() { return rewardEpoch; }
         public void setRewardEpoch(int rewardEpoch) { this.rewardEpoch = rewardEpoch; }
+        public List<Rate> getRates() { return rates; }
+        public void setRates(List<Rate> rates) { this.rates = rates; }
     }
     
     // Nested class for tokens
