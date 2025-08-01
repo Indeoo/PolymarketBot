@@ -42,4 +42,11 @@ public interface MarketRepository extends JpaRepository<MarketEntity, Long> {
      * @return list of markets that are not closed
      */
     List<MarketEntity> findByClosedFalse();
+    
+    /**
+     * Count all active markets.
+     * 
+     * @return count of active markets
+     */
+    long countByActiveTrue();
 }
